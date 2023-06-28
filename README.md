@@ -28,3 +28,4 @@ wavenumber,transmittance
 3998.5016648769406,83.4233643166248
 3997.569830417636,83.3704323844316
 ```
+for individual files or entire folders.
