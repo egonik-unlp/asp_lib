@@ -6,6 +6,7 @@ description = "Parses Agilent .asp files and converts them into .csv format addi
 license = "MIT OR Apache-2.0"
 repository = "https://github.com/egonik-unlp/asp_lib"
 authors = ["Eduardo Gonik <gonik@quimica.unlp.edu.ar>"]
+documentation = "https://docs.rs/asp_lib/latest/asp_lib/fn.handle_single_spectrum.html"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
