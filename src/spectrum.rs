@@ -1,5 +1,5 @@
 use csv::Writer;
-use std::error::Error;
+use std::{error::Error, fs::create_dir_all, path::Path};
 #[derive(Debug)]
 pub struct Spectrum {
     pub filename: String,
@@ -17,15 +17,24 @@ impl Spectrum {
     }
 
     pub fn to_csv(&self, dest_folder: &str) -> Result<String, Box<dyn Error>> {
-	let conv_filename = format!(
-		"./{}/{}.csv",
-		dest_folder,
-		&self.filename[..self.filename.len() - 4]
-	    );
+        let conv_filename = format!(
+            "./{}/{}.csv",
+            dest_folder,
+            &self.filename[..self.filename.len() - 4]
+        );
+        let path = Path::new(&conv_filename);
+        if let Some(prnt) = path.parent() {
+            if !prnt.is_dir() {
+                create_dir_all(path).expect(&format!(
+                    "Se necesito crear el directorio raiz {} pero esto no fue posible",
+                    prnt.display()
+                ));
+            }
+        }
         let mut wtr = Writer::from_path(&conv_filename)?;
         wtr.write_record(&["wavenumber", "transmittance"])?;
         self.wavenumber_grid
-	    .clone()
+            .clone()
             .into_iter()
             .zip(self.transmittance_grid.clone())
             .for_each(|(wn, tr)| wtr.write_record(&[wn.to_string(), tr.to_string()]).unwrap());

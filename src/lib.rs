@@ -31,7 +31,6 @@ pub fn handle_many_spectra(path: &str, export_path: &str) -> () {
 /// ```
 pub fn handle_single_spectrum(filepath: &str, savepath: &str) -> () {
     let spectrum = handle_one_file(filepath).expect("Problema leyendo el archivo");
-    spectrum
-        .to_csv(savepath)
-        .expect("Error guardando el archivo");
+    let errstring: &str = &format!("Error guardando el archivo {}", filepath);
+    spectrum.to_csv(savepath).expect(errstring);
 }
