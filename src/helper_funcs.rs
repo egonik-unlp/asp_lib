@@ -36,7 +36,7 @@ pub fn handle_one_file(filename: &str) -> Result<Spectrum, Box<dyn Error>> {
     Ok(spec)
 }
 
-pub fn handle_folders(paths: Vec<DirEntry>, export_path : &str) {
+pub fn handle_folders(paths: Vec<DirEntry>, export_path: &str) {
     let basepath = Path::new(export_path);
     for foldpath in paths.into_iter() {
         let pth = basepath.join(foldpath.path());

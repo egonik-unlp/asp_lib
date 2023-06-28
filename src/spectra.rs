@@ -6,11 +6,11 @@ use walkdir::WalkDir;
 #[derive(Debug)]
 pub struct Spectra {
     pub data: Vec<Spectrum>,
-    pub export_path : String
+    pub export_path: String,
 }
 
 impl Spectra {
-    pub fn build_from_path(path: &str, export_path : &str) -> Result<Spectra, Box<dyn Error>> {
+    pub fn build_from_path(path: &str, export_path: &str) -> Result<Spectra, Box<dyn Error>> {
         let walker = WalkDir::new(path);
         let (files, dirs) = walker
             .into_iter()
@@ -48,7 +48,7 @@ impl Spectra {
             .collect::<Vec<_>>();
         Ok(Spectra {
             data: spectrum_vector,
-	    export_path: export_path.to_owned()
+            export_path: export_path.to_owned(),
         })
     }
     pub fn export_all(self) -> () {
