@@ -1,6 +1,6 @@
 [package]
 name = "asp_lib"
-version = "0.1.3"
+version = "0.1.4"
 edition = "2021"
 description = "Parses Agilent .asp files and converts them into .csv format adding wavenumber column"
 license = "MIT OR Apache-2.0"
