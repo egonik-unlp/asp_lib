@@ -25,7 +25,7 @@ impl Spectrum {
         let path = Path::new(&conv_filename);
         if let Some(prnt) = path.parent() {
             if !prnt.is_dir() {
-                create_dir_all(path).expect(&format!(
+                create_dir_all(prnt).expect(&format!(
                     "Se necesito crear el directorio raiz {} pero esto no fue posible",
                     prnt.display()
                 ));
@@ -39,6 +39,7 @@ impl Spectrum {
             .zip(self.transmittance_grid.clone())
             .for_each(|(wn, tr)| wtr.write_record(&[wn.to_string(), tr.to_string()]).unwrap());
         wtr.flush()?;
+        println!("se logro exportar exitosamente el archivo {}", &conv_filename);
         Ok(String::from(&conv_filename))
     }
 }
