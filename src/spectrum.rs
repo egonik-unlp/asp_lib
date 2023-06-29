@@ -39,7 +39,10 @@ impl Spectrum {
             .zip(self.transmittance_grid.clone())
             .for_each(|(wn, tr)| wtr.write_record(&[wn.to_string(), tr.to_string()]).unwrap());
         wtr.flush()?;
-        println!("se logro exportar exitosamente el archivo {}", &conv_filename);
+        println!(
+            "se logro exportar exitosamente el archivo {}",
+            &conv_filename
+        );
         Ok(String::from(&conv_filename))
     }
 }

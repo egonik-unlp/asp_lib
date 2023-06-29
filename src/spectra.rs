@@ -2,7 +2,7 @@ use crate::spectrum::Spectrum;
 use crate::*;
 use helper_funcs::*;
 use walkdir::WalkDir;
-
+use std::io:: ErrorKind;
 #[derive(Debug)]
 pub struct Spectra {
     pub data: Vec<Spectrum>,
@@ -11,6 +11,11 @@ pub struct Spectra {
 
 impl Spectra {
     pub fn build_from_path(path: &str, export_path: &str) -> Result<Spectra, Box<dyn Error>> {
+        match Path::new(&path).exists() {
+            true => Ok(()),
+            false => Err(std::io::Error::new(ErrorKind::NotFound,  format!("No se hallo el directorio {}", path) ))
+        }? ;
+        
         let walker = WalkDir::new(path);
         let (files, dirs) = walker
             .into_iter()

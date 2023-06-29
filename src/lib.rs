@@ -6,7 +6,7 @@ use helper_funcs::handle_one_file;
 use spectra::Spectra;
 use split_iter::Splittable;
 use std::error::Error;
-use std::path::Path;
+use std::path::{self, Path};
 
 /// Parses a directory `path` (subdirectories included)., finds all .asp files contained
 /// within, and generates the same folder structure with converted .csv files in `export_path`
@@ -16,9 +16,13 @@ use std::path::Path;
 /// use asp_lib::handle_many_spectra;
 /// handle_many_spectra(".", "./exported files")
 /// ```
-pub fn handle_many_spectra(path: &str, export_path: &str) -> () {
-    let spectra = Spectra::build_from_path(path, export_path).unwrap();
+pub fn handle_many_spectra(
+    path: &str,
+    export_path: &str,
+) -> Result<String, Box<dyn std::error::Error>> {
+    let spectra = Spectra::build_from_path(path, export_path)?;
     spectra.export_all();
+    Ok(String::from(path))
 }
 
 /// Converts a single .asp file into .csv. It also adds the corresponding wavenumber column
@@ -29,8 +33,11 @@ pub fn handle_many_spectra(path: &str, export_path: &str) -> () {
 /// # to generate ./exported/file.csv
 /// handle_single_spectrum("file.asp", "./exported")
 /// ```
-pub fn handle_single_spectrum(filepath: &str, savepath: &str) -> () {
-    let spectrum = handle_one_file(filepath).expect("Problema leyendo el archivo");
-    let errstring: &str = &format!("Error guardando el archivo {}", filepath);
-    spectrum.to_csv(savepath).expect(errstring);
+pub fn handle_single_spectrum(
+    filepath: &str,
+    savepath: &str,
+) -> Result<String, Box<dyn std::error::Error>> {
+    let spectrum = handle_one_file(filepath)?;
+    spectrum.to_csv(savepath)?;
+    Ok(String::from(filepath))
 }
