@@ -1,4 +1,6 @@
 #![feature(iter_next_chunk)]
+#![feature(absolute_path)]
+
 mod helper_funcs;
 mod spectra;
 mod spectrum;

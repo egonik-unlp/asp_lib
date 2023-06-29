@@ -1,5 +1,9 @@
 use csv::Writer;
-use std::{error::Error, fs::create_dir_all, path::Path};
+use std::{
+    error::Error,
+    fs::create_dir_all,
+    path::Path,
+};
 #[derive(Debug)]
 pub struct Spectrum {
     pub filename: String,
@@ -17,12 +21,15 @@ impl Spectrum {
     }
 
     pub fn to_csv(&self, dest_folder: &str) -> Result<String, Box<dyn Error>> {
-        let conv_filename = format!(
-            "./{}/{}.csv",
-            dest_folder,
+        println!(
+            "EN PATH ES EN EN {}",
             &self.filename[..self.filename.len() - 4]
         );
-        let path = Path::new(&conv_filename);
+        let orpath = Path::new(&self.filename);
+        let folder = orpath.clone().parent().unwrap();
+        let file = orpath.clone().file_name().unwrap();
+        let path = folder.join(dest_folder).join(file);
+
         if let Some(prnt) = path.parent() {
             if !prnt.is_dir() {
                 create_dir_all(prnt).expect(&format!(
@@ -31,7 +38,7 @@ impl Spectrum {
                 ));
             }
         }
-        let mut wtr = Writer::from_path(&conv_filename)?;
+        let mut wtr = Writer::from_path(&path)?;
         wtr.write_record(&["wavenumber", "transmittance"])?;
         self.wavenumber_grid
             .clone()
@@ -41,8 +48,8 @@ impl Spectrum {
         wtr.flush()?;
         println!(
             "se logro exportar exitosamente el archivo {}",
-            &conv_filename
+            &path.to_str().unwrap()
         );
-        Ok(String::from(&conv_filename))
+        Ok((&path).to_str().unwrap().to_owned())
     }
 }

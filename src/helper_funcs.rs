@@ -3,8 +3,8 @@ use itertools::Itertools;
 use itertools_num::linspace;
 use std::error::Error;
 use std::fs;
-use std::path::Path;
-use walkdir::DirEntry;
+use std::path::{Path, PathBuf};
+
 
 pub fn extension_is_asp(filename: &String) -> bool {
     let path = Path::new(filename).extension();
@@ -36,10 +36,12 @@ pub fn handle_one_file(filename: &str) -> Result<Spectrum, Box<dyn Error>> {
     Ok(spec)
 }
 
-pub fn handle_folders(paths: Vec<DirEntry>, export_path: &str) {
+
+pub fn handle_folders(paths: Vec<PathBuf>, export_path: &str) {
     let basepath = Path::new(export_path);
     for foldpath in paths.into_iter() {
-        let pth = basepath.join(foldpath.path());
+        let pth = foldpath.join(basepath);
+        println!("EL PAH ES {:?}", &pth);
         if pth.ne(basepath) {
             fs::create_dir_all(pth).unwrap();
         }
