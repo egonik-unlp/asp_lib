@@ -1,5 +1,7 @@
 #![feature(iter_next_chunk)]
 #![feature(absolute_path)]
+#![feature(path_file_prefix)]
+
 
 mod helper_funcs;
 mod spectra;

@@ -41,7 +41,6 @@ pub fn handle_folders(paths: Vec<PathBuf>, export_path: &str) {
     let basepath = Path::new(export_path);
     for foldpath in paths.into_iter() {
         let pth = foldpath.join(basepath);
-        println!("EL PAH ES {:?}", &pth);
         if pth.ne(basepath) {
             fs::create_dir_all(pth).unwrap();
         }

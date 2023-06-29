@@ -21,13 +21,10 @@ impl Spectrum {
     }
 
     pub fn to_csv(&self, dest_folder: &str) -> Result<String, Box<dyn Error>> {
-        println!(
-            "EN PATH ES EN EN {}",
-            &self.filename[..self.filename.len() - 4]
-        );
         let orpath = Path::new(&self.filename);
         let folder = orpath.clone().parent().unwrap();
-        let file = orpath.clone().file_name().unwrap();
+        let filename = orpath.clone().file_prefix().unwrap();
+        let file = Path::new(&filename).with_extension("asp");
         let path = folder.join(dest_folder).join(file);
 
         if let Some(prnt) = path.parent() {
