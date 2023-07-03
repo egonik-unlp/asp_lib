@@ -5,7 +5,6 @@ use std::error::Error;
 use std::fs;
 use std::path::{Path, PathBuf};
 
-
 pub fn extension_is_asp(filename: &String) -> bool {
     let path = Path::new(filename).extension();
     match path {
@@ -35,7 +34,6 @@ pub fn handle_one_file(filename: &str) -> Result<Spectrum, Box<dyn Error>> {
     let spec = Spectrum::new(filename.to_owned(), wng, tnsg);
     Ok(spec)
 }
-
 
 pub fn handle_folders(paths: Vec<PathBuf>, export_path: &str) {
     let basepath = Path::new(export_path);
