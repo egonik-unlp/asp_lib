@@ -1,11 +1,5 @@
 use csv::Writer;
-
-use std::path::PathBuf;
 use std::{error::Error, fs::create_dir_all, path::Path};
-
-use plotly::common::{Mode, Title};
-use plotly::layout::{Axis, Layout};
-use plotly::{ImageFormat, Plot, Scatter};
 
 #[derive(Debug)]
 pub struct Spectrum {
@@ -24,31 +18,6 @@ impl Spectrum {
             filepath: None,
         }
     }
-    #[cfg(feature = "plotting")]
-    pub fn plot(&self) -> () {
-        let name_as_path = Path::new(&self.filename)
-            .file_prefix()
-            .unwrap()
-            .to_str()
-            .unwrap();
-        let mut plot = Plot::new();
-        let trace = Scatter::new(
-            self.wavenumber_grid.clone(),
-            self.transmittance_grid.clone(),
-        )
-        .mode(Mode::Lines);
-        plot.add_trace(trace);
-        let lyt = Layout::new()
-            .title(Title::new(&name_as_path))
-            .x_axis(Axis::new().title(Title::new("wavenumber")))
-            .y_axis(Axis::new().title(Title::new("Transmittance (U.A)")));
-        plot.set_layout(lyt);
-        let mut filename = PathBuf::from(&self.filepath.as_ref().unwrap());
-        filename.set_extension("png"); // let filename = format!("{}.png", &name_as_path);
-        println!("para imagen {:?}", filename);
-        plot.write_image(filename, ImageFormat::PNG, 800, 600, 1.0);
-    }
-
     pub fn to_csv(&mut self, dest_folder: &str) -> Result<String, Box<dyn Error>> {
         let orpath = Path::new(&self.filename);
         let folder = orpath.clone().parent().unwrap();

@@ -68,20 +68,20 @@ impl Spectra {
             export_path: export_path.to_owned(),
         })
     }
-    pub fn export_all(self, plot: bool) -> () {
+
+
+    pub fn export_all(self) -> () {
         println!("ES NUEVO");
         for mut file in self.data.into_iter() {
             println!("leyendo archivo {}", file.filename);
             let filename = file.to_csv(&self.export_path);
             match filename {
-                Ok(dato) => {
-                    println!("Exportado como {}", dato);
-                    if plot {
-                        file.plot()
-                    }
-                }
+                Ok(dato) => println!("Exportado como {}", dato),
                 Err(e) => println!("error => {:?}", e),
             }
         }
     }
+
+
+
 }

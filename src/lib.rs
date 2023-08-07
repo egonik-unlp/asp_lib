@@ -23,10 +23,9 @@ use std::path::{self, Path};
 pub fn handle_many_spectra(
     path: &str,
     export_path: &str,
-    plot: bool,
 ) -> Result<String, Box<dyn std::error::Error>> {
     let spectra = Spectra::build_from_path(path, export_path)?;
-    spectra.export_all(plot);
+    spectra.export_all();
     Ok(String::from(path))
 }
 
@@ -40,13 +39,9 @@ pub fn handle_many_spectra(
 /// ```
 pub fn handle_single_spectrum(
     filepath: &str,
-    savepath: &str,
-    plot: bool,
+    savepath: &str
 ) -> Result<String, Box<dyn std::error::Error>> {
     let mut spectrum = handle_one_file(filepath)?;
     spectrum.to_csv(savepath)?;
-    if plot {
-        spectrum.plot()
-    }
     Ok(String::from(filepath))
 }
