@@ -8,9 +8,8 @@ mod spectrum;
 use helper_funcs::handle_one_file;
 
 use spectra::Spectra;
-use split_iter::Splittable;
 use std::error::Error;
-use std::path::{self, Path};
+use std::path:: Path;
 
 /// Parses a directory `path` (subdirectories included)., finds all .asp files contained
 /// within, and generates the same folder structure with converted .csv files in `export_path`
@@ -39,9 +38,9 @@ pub fn handle_many_spectra(
 /// ```
 pub fn handle_single_spectrum(
     filepath: &str,
-    savepath: &str
+    savepath: &str,
 ) -> Result<String, Box<dyn std::error::Error>> {
-    let mut spectrum = handle_one_file(filepath)?;
+    let mut spectrum = handle_one_file(filepath, None)?;
     spectrum.to_csv(savepath)?;
     Ok(String::from(filepath))
 }

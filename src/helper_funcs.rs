@@ -13,7 +13,8 @@ pub fn extension_is_asp(filename: &String) -> bool {
     }
 }
 
-pub fn handle_one_file(filename: &str) -> Result<Spectrum, Box<dyn Error>> {
+pub fn handle_one_file(filename: &str, bp: Option<String>) -> Result<Spectrum, Box<dyn Error>> {
+    println!("voy a tratar de leer {}", filename);
     let contents = fs::read_to_string(filename)?;
     let mut contents = contents.lines();
     let (ln, hwn, lwn): (f64, f64, f64) = contents
@@ -31,16 +32,19 @@ pub fn handle_one_file(filename: &str) -> Result<Spectrum, Box<dyn Error>> {
         .into_iter()
         .filter_map(|x| x.parse::<f64>().ok())
         .collect();
-    let spec = Spectrum::new(filename.to_owned(), wng, tnsg);
+    let spec = Spectrum::new(filename.to_owned(), wng, tnsg, bp);
     Ok(spec)
 }
 
 pub fn handle_folders(paths: Vec<PathBuf>, export_path: &str) {
     let basepath = Path::new(export_path);
-    for foldpath in paths.into_iter() {
-        let pth = foldpath.join(basepath);
-        if pth.ne(basepath) {
-            fs::create_dir_all(pth).unwrap();
-        }
-    }
+    println!("handle folders recibe dos argumentos {paths:?} y export path {export_path}");
+    let filepath = basepath.join(paths.iter().nth(0).unwrap());
+    // let filepath = paths.iter().nth(0).unwrap().join(basepath);
+    fs::create_dir_all(filepath).expect("malio sal algo creando files");
+    // for foldpath in paths.into_iter() {
+    //     let pth = foldpath.join(basepath);
+    //     if pth.ne(basepath) {
+    //         fs::create_dir_all(pth).unwrap();
+    //     }
 }

@@ -1,6 +1,8 @@
 use crate::spectrum::Spectrum;
 use crate::*;
 use helper_funcs::*;
+use itertools::Itertools;
+use split_iter::Splittable;
 use std::io::Error as IOError;
 use std::io::ErrorKind;
 use walkdir::WalkDir;
@@ -28,47 +30,52 @@ impl Spectra {
             )),
         }?;
         let walker = WalkDir::new(path);
-        let (files, dirs) = walker
-            .into_iter()
-            .split(|path| path.as_ref().unwrap().path().is_dir());
+        let (files, dirs) = walker.into_iter().split(|path| {
+            println!(" split iterator {:?}", path.as_ref().unwrap());
+            let splitter = path.as_ref().unwrap().path().is_dir();
+            println!("{splitter}");
+            splitter
+        });
 
         let spectral_files = files
             .into_iter()
-            .map(|x| x.unwrap().path().display().to_string())
+            .map(|x| {
+                x.unwrap()
+                    .path()
+                    .strip_prefix(path)
+                    .map(|x| {
+                        println!("post strip prefix{:?}", x);
+                        x
+                    })
+                    .unwrap()
+                    .display()
+                    .to_string()
+            })
             .filter(|x| extension_is_asp(x))
             .collect::<Vec<_>>();
-
+        println!("SPF => {spectral_files:?}");
         let newly_created_folders = dirs
             .into_iter()
-            .filter(|dir| {
-                dir.as_ref()
-                    .unwrap()
-                    .path()
-                    .into_iter()
-                    .any(|path_name| !path_name.eq(export_path))
+            .map(|folder_path| {
+                let aspath = folder_path.unwrap();
+                let individual_path = aspath.path().strip_prefix(path).unwrap();
+                path.join(export_path).join(individual_path)
             })
-            .filter(|entry| {
-                spectral_files
-                    .clone()
-                    .iter()
-                    .map(|st| Path::new(st).parent().unwrap())
-                    .any(|fp| fp.eq(entry.as_ref().unwrap().path()))
-            })
-            .map(|node| node.unwrap())
-            .map(|pth| path::absolute(pth.path()).unwrap())
-            .collect::<Vec<_>>();
+            .collect_vec();
         handle_folders(newly_created_folders, export_path);
 
         let spectrum_vector = spectral_files
             .into_iter()
-            .map(|x| handle_one_file(&x).unwrap())
+            .map(|x| {
+                let full_pathname = format!("{}/{}", path.display().to_string(), x);
+                handle_one_file(&full_pathname, Some(path.display().to_string())).unwrap()
+            })
             .collect::<Vec<_>>();
         Ok(Spectra {
             data: spectrum_vector,
             export_path: export_path.to_owned(),
         })
     }
-
 
     pub fn export_all(self) -> () {
         println!("ES NUEVO");
@@ -81,7 +88,4 @@ impl Spectra {
             }
         }
     }
-
-
-
 }
