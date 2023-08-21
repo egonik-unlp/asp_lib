@@ -30,30 +30,19 @@ impl Spectra {
             )),
         }?;
         let walker = WalkDir::new(path);
-        let (files, dirs) = walker.into_iter().split(|path| {
-            println!(" split iterator {:?}", path.as_ref().unwrap());
-            let splitter = path.as_ref().unwrap().path().is_dir();
-            println!("{splitter}");
-            splitter
-        });
-
+        let (files, dirs) = walker.into_iter().split(|path| path.as_ref().unwrap().path().is_dir());
         let spectral_files = files
             .into_iter()
             .map(|x| {
                 x.unwrap()
                     .path()
                     .strip_prefix(path)
-                    .map(|x| {
-                        println!("post strip prefix{:?}", x);
-                        x
-                    })
                     .unwrap()
                     .display()
                     .to_string()
             })
             .filter(|x| extension_is_asp(x))
             .collect::<Vec<_>>();
-        println!("SPF => {spectral_files:?}");
         let newly_created_folders = dirs
             .into_iter()
             .map(|folder_path| {
