@@ -38,7 +38,8 @@ impl Spectrum {
         };
         let mut logfile = OpenOptions::new()
             .append(true)
-            .open("/home/gonik/Documents/log_files_generados.txt")
+            .create(true)
+            .open(format!("{}/log_files_generados.txt", folder.display().to_string()))
             .expect("no pude generar/abrir logfile");
 
         self.filepath = Some(
